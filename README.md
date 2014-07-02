@@ -17,7 +17,7 @@ El siguiente diagrama muestra a grandes rasgos como es la comunicación para un
 
 ![Diagrama de llamadas](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo-llamadas.png "Diagrama de llamadas")
 
-Toda la información deberá ser transmitida encriptada con un certificado SSL bajo el protocolo https, en caso que el comercio no cuente con un certificado digital vigente y proporcionado por una empresa autorizada, se deberá solicitar la documentación con encriptación a través de llaves públicas.
+Se recomienda que toda la información sea transmitida encriptada con un certificado SSL bajo el protocolo https. El certificado debe ser válido y emitido por una entidad de certificacion autorizada (no puede ser autofirmado). La API también permite su utilización sin contar con un certificado SSL. Esta variante se explica en el paso 4, durante la notificacion al comercio.
 
 Cada request realizado al servicio web debería ir firmado para comprobar la integridad y la autenticidad de la petición.
 
@@ -43,7 +43,7 @@ Headers:
 <fecha mismo formato del header>”
 ```
 
-Ejemplo: 
+Ejemplo:
 
 ```
 “transaccion/crear\n 9787415132\n
@@ -73,5 +73,235 @@ Variables:
 Ejemplo json:
 
 ```json
-{"trx_id":9787415132,"medio_pago":"999","monto":1000000.00}
+{
+	"trx_id":9787415132,
+	"medio_pago":"999",
+	"monto":1000000.00
+}
+```
+
+### Paso 2
+
+Nuestra API devuelve la respuesta al request realizado en el paso 1.
+
+Respuesta:
+
+* respuesta: 00 = OK (Otras según tabla errores)
+* token: Identificador único de la transacción en Punto Pagos
+* trx_id: Identificador único de la transacción del cliente
+* monto:Montototaldelatransacción
+* error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
+
+Ejemplo json:
+
+```json
+{
+	"respuesta":"00",
+	"token":"9XJ08401WN0071839",
+	"trx_id":9787415132,
+	"medio_pago":"999",
+	"monto":1000000.00
+}
+```
+
+### Paso 3
+
+Se redirecciona al cliente a la URL de procesamiento usando el token obtenido en el paso 2
+
+```
+Función: https://servidor/transaccion/procesar/<token>
+Método: GET
+```
+
+Ejemplo: ``https://servidor/transaccion/procesar/9XJ08401WN0071839``
+
+### Paso 4
+
+Luego que el cliente realiza el pago en la institución financiera, Punto Pagos procederá a notificar al comercio que se efectuó el pago, a la URL de notificacion previamente definida por el comercio.
+
+En el caso que la url de notificacion sea via HTTPS (utilizando encriptación SSL), el servidor hace una llamada a la URL de notificacion:
+
+```
+Función: https://url_notificacion (lado del comercio)
+Método: POST
+```
+
+Headers:
+
+* Fecha: Fecha del request según la especificación RFC1123.
+  * Fecha: Mon, 15 Jun 2009 20:45:30 GMT
+* Autorizacion: Punto Pagos firmará el mensaje utilizando la llave secreta del cliente, el mensaje a firmar tendrá el siguiente formato:
+
+```
+“transaccion/notificacion\n
+<token>\n
+<identificador transacción>\n
+<monto operación con dos decimales>\n
+<fecha mismo formato del header>”
+```
+
+Ejemplo:
+
+```
+“transaccion/notificacion\n 9XJ08401WN0071839\n
+9787415132\n
+1000000.00\n
+Mon, 15 Jun 2009 20:48:30 GMT”
+```
+
+Al igual que en el paso 1, después de firmado el mensaje el header tendrá el siguiente formato:
+
+Autorizacion: PP <LlaveID>:<MensajeFirmado>
+Ejemplo:
+
+* Autorizacion: PP 0PN5J17HBGZHT7ZZ3X82:fU6+JLYWzOSGuo76XJzT/Z596Qg=
+
+El comercio deberá validar la firma del mensaje para corroborar el origen del mismo, si el
+mensaje está firmado incorrectamente deberá devolver un error de autentificación.
+
+Variables:
+* token: Identificador único de la transacción en Punto Pagos
+* trx_id: Identificador único de la transacción del cliente
+* medio_pago: Identificador del medio de pago
+* monto:Montototaldelatransacción
+* fecha_aprobacion:Fechadeaprobacióndelatransacción(Formato:yyyy-MM-ddTHH:mm:ss)
+* numero_tarjeta: 4 últimos dígitos de la tarjeta (opcional)
+* num_cuotas: número de cuotas (opcional)
+* tipo_cuotas: tipo de cuotas (opcional)
+* valor_cuota: valor de cada cuota (opcional)
+* primer_vencimiento:primervencimiento(Formato:yyyy-MM-dd) (opcional)
+* numero_operacion: Número de operación en la institución financiera (opcional)
+* codigo_autorizacion: Código de autorización de la transacción
+
+Ejemplo json:
+
+```json
+{
+	"token":"9XJ08401WN0071839",
+	"trx_id":9787415132,
+	"medio_pago":"999",
+	"monto":1000000.00,
+	"fecha":"2009-06-15T20:49:00",
+	"numero_operacion":"7897851487",
+	"codigo_autorizacion":"34581"
+}
+```
+
+En el caso que no se cuente con un certificado SSL valido y la url de notificación del comercio sea solamente http, el servidor no envía los datos de la notificacion completos, sino que hace una llamada a la url informando el token. El comercio debera, ya con el token en su poder, realizar otra llamada a nuestra api (como se explica en la descripcion de ``transaccion/traer``), esta vez si, conectándose a nuestra api via SSL de manera segura.
+
+```
+Función: https://url_notificacion<token> (lado del comercio)
+Método: GET
+```
+
+### Paso 6
+
+Luego de procesado el pago y en caso de que sea exitoso, Punto Pagos procederá a redireccionar al cliente hacia la página del comercio.
+
+```
+Función: https://url_exito<token> (lado del comercio)
+Método: GET
+```
+
+Ejemplo:
+
+Url de exito del comercio: ``https://micomercio.com/transacciones/exito/``
+Redireccion en caso de exito: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
+
+Antes de dar la transacción por aprobada, el comercio deberá verificar que la notificación de dicha transacción haya llegado correctamente a través del token, en caso de que la notificación no haya sido recibida, el comercio podrá verificar el estado del pago con la función: https://servidor/transaccion/<token> y mostrar los comprobantes correspondientes.
+
+En el caso que no se haya podido procesar el pago, Punto Pagos redireccionará hacia el url de fracaso donde el cliente mostrara una pantalla en donde se comunica al cliente que el pago de la transacción no ha sido completado con éxito.
+
+```
+Función: https://url_fracaso<token>
+Método: GET
+```
+
+Ejemplo:
+
+Url de exito del comercio: ``https://micomercio.com/transacciones/fracaso/``
+Redireccion en caso de exito: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
+
+### Obtener el estado de una transaccion
+
+El comercio en todo momento podrá verificar el pago de una determinada transacción.
+
+```
+Función: https://servidor/transaccion/<token>
+Método: GET
+```
+
+Headers:
+
+* Fecha: Fecha del request según la especificación RFC1123.
+  * Fecha: Mon, 15 Jun 2009 20:50:30 GMT
+
+* Autorizacion: Punto Pagos firmará el mensaje utilizando la llave secreta del cliente, el mensaje a firmar tendrá el siguiente formato:
+
+```
+“transaccion/traer\n
+<token>\n
+<identificador transacción>\n
+<monto operación con dos decimales>\n
+<fecha mismo formato del header>”
+```
+
+Ejemplo:
+
+```
+“transaccion/traer\n
+9XJ08401WN0071839\n
+9787415132\n
+1000000.00\n
+Mon, 15 Jun 2009 20:50:30 GMT”
+```
+
+Después de firmado el mensaje el header tendrá el siguiente formato: Autorizacion: PP <LlaveID>:<MensajeFirmado>
+
+Ejemplo:
+
+Parametros:
+
+* LlaveID=0PN5J17HBGZHT7ZZ3X82
+* LlaveSecreta=uV3F4YluFJax1cKnvbcGwgjvx4QpvB+leU8dUj2o
+  * Autorizacion: PP 0PN5J17HBGZHT7ZZ3X82:AVrD3e9idIqAxRSH+15Yqz7qQkc=
+
+Respuesta:
+
+* respuesta: 00 = OK (Otras según tabla errores)
+* token: Identificador único de la transacción en Punto Pagos
+* trx_id:Identificadorúnicodelatransaccióndelcliente (opcional)
+* medio_pago:Identificadordelmediodepago(opcional)
+* monto:Montototaldelatransacción(opcional)
+* fecha_aprobacion:Fechadeaprobacióndelatransacción(Formato:yyyy-MM-ddTHH:mm:ss) (opcional)
+* numero_tarjeta: 4 últimos dígitos de la tarjeta (opcional)
+* num_cuotas: número de cuotas (opcional)
+* tipo_cuotas: tipo de cuotas (opcional)
+* valor_cuota: valor de cada cuota (opcional)
+* primer_vencimiento:primervencimiento(Formato:yyyy-MM-dd) (opcional)
+* numero_operacion: Número de operación en la institución financiera (opcional)
+* codigo_autorizacion:Códigodeautorizacióndelatransacción(opcional)
+* error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
+
+Ejemplos json:
+
+```json
+{
+	"respuesta":"00",
+	"token":"9XJ08401WN0071839",
+	"trx_id":9787415132,
+	"medio_pago":"999",
+	"monto":1000000.00,
+	"fecha":"2009-06-15T20:49:00",
+	"numero_operacion":"7897851487",
+	"codigo_autorizacion":"34581"
+}
+```
+
+```json
+{
+	"respuesta":"99",
+	"token":"9XJ08401WN0071839",
+	"error":"Pago Rechazado"
+}
 ```
