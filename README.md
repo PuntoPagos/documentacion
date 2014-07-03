@@ -1,4 +1,4 @@
-PuntoPagos API
+PuntoPagos API (Borrador - en progreso)
 =============
 
 ## Perspectiva General
