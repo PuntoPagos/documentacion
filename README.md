@@ -305,3 +305,28 @@ Ejemplos json:
 	"error":"Pago Rechazado"
 }
 ```
+
+## Anexos
+
+### Codigos de error
+
+Estos son los diferentes codigos de error que puede informar la API
+
+Código | Descripcion
+-------|------------------------
+1      | Transaccion Rechazada
+2      | Transaccion Anulada
+6      | Transaccion Incompleta
+7      | Error del financiador
+
+### Datos de prueba para el modo sandbox
+
+Numeros de tarjeta para WebPay
+
+Tarjeta | Numero | CCV | Expiracion | Resultado Esperado
+--------|--------|-----|------------|--------------------
+Visa    | 4051885600446623 | 123 | cualquiera | Exito
+Mastercard | 5186059559590568 | 123 | cualquiera |Fracaso 
+
+Al pedir un RUT se debe ingresar ``11111111-1`` y la clave ``123``
+
