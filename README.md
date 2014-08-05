@@ -308,6 +308,20 @@ Ejemplos json:
 
 ## Anexos
 
+### Códigos de los medios de pago
+
+Código | Descripcion
+-------|------------------------
+2      | Tarjeta Presto
+3      | Webpay Transbank (tarjetas de crédito y débito)
+4      | Botón de Pago Banco de Chile
+5      | Botón de Pago BCI
+6      | Botón de Pago TBanc
+7      | Botón de Pago Banco Estado
+16     | Botón de Pago BBVA
+10     | Tarjeta Ripley
+15     | Tarjeta Paypal
+
 ### Codigos de error
 
 Estos son los diferentes codigos de error que puede informar la API
