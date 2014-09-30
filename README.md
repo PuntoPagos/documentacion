@@ -320,7 +320,7 @@ Código | Descripcion
 7      | Botón de Pago Banco Estado
 16     | Botón de Pago BBVA
 10     | Tarjeta Ripley
-15     | Tarjeta Paypal
+15     | Paypal
 
 ### Codigos de error
 
