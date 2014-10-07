@@ -19,7 +19,30 @@ El siguiente diagrama muestra a grandes rasgos como es la comunicación para un
 
 Se recomienda que toda la información sea transmitida encriptada con un certificado SSL bajo el protocolo https. El certificado debe ser válido y emitido por una entidad de certificacion autorizada (no puede ser autofirmado). La API también permite su utilización sin contar con un certificado SSL. Esta variante se explica en el paso 4, durante la notificacion al comercio.
 
-Cada request realizado al servicio web debería ir firmado para comprobar la integridad y la autenticidad de la petición.
+Cada request realizado al servicio web debería ir firmado para comprobar la integridad y la autenticidad de la petición
+
+### Modo Sandbox (desarrollo) versus Producción
+
+Los 2 ambientes funcionan exactamente de la misma manera. La idea es que primero se realicen pruebas en modo sandbox y, una vez que la integración funcione correctamente, pasar a produccion.
+
+La url en modo sanbox es:
+```
+https://sandbox.puntopagos.com
+```
+
+La url de producción es:
+```
+https://www.puntopagos.com
+```
+
+Las rutas son las mismas en modo Sandbox y produccion, por ejemplo, en modo sanbox la url para crear una transaccion es
+```
+https://sandbox.puntopagos.com/transaccion/crear
+```
+Mientras que en producción sería:
+```
+https://www.puntopagos.com/transaccion/crear
+```
 
 ### Paso 1
 
