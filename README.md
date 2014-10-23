@@ -43,6 +43,7 @@ Mientras que en producción sería:
 ```
 https://www.puntopagos.com/transaccion/crear
 ```
+Por el momento los únicos medios de pago que se pueden usar en modo sandbox, son [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
 
 ### Paso 1
 
