@@ -89,7 +89,7 @@ El servicio validará la firma del mensaje y como medida de seguridad adicional
 
 Variables:
 
-* trx_id: Identificador único de la transacción del cliente
+* trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracteres
 * medio_pago: Identificador del medio de pago (existe servicio web para consultar todos los medios de pagos disponibles para el cliente)
 * monto:Montototaldelatransacción
 * detalle: Descripción del producto o servicio pagado (opcional)
@@ -112,8 +112,8 @@ Respuesta:
 
 * respuesta: 00 = OK (Otras según tabla errores)
 * token: Identificador único de la transacción en Punto Pagos
-* trx_id: Identificador único de la transacción del cliente
-* monto:Montototaldelatransacción
+* trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracter
+* monto:Monto total de la transacción
 * error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
 
 Ejemplo json:
