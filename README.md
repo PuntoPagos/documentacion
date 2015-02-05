@@ -98,7 +98,7 @@ Ejemplo json:
 
 ```json
 {
-	"trx_id":9787415132, //Su longitud no debe ser mayor a 15 caracteres
+	"trx_id":9787415132,
 	"medio_pago":"999",
 	"monto":1000000.00
 }
