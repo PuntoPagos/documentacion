@@ -90,8 +90,8 @@ El servicio validará la firma del mensaje y como medida de seguridad adicional
 Variables:
 
 * trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracteres
-* medio_pago: Identificador del medio de pago (existe servicio web para consultar todos los medios de pagos disponibles para el cliente)
-* monto:Montototaldelatransacción
+* medio_pago: Identificador del medio de pago. [Medios disponibles](#c%C3%B3digos-de-los-medios-de-pago)
+* monto:Monto total de la transacción
 * detalle: Descripción del producto o servicio pagado (opcional)
 
 Ejemplo json:
