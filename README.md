@@ -368,3 +368,16 @@ Mastercard | 5186059559590568 | 123 | cualquiera |Fracaso
 
 Al pedir un RUT se debe ingresar ``11111111-1`` y la clave ``123``
 
+#### Ripley
+
+Para usar Ripley en modo sandbox estos son los datos:
+
+```
+Rut: 16389806-3
+Clave: 1234
+Numero de tarjeta: 6281561467501027
+Codigo de verificacion: 360
+Vencimiento: 08-20
+Coordenadas: 77 77 77 (uno en cada box que solicita)
+Mail: test@test.com
+```
