@@ -330,6 +330,18 @@ Ejemplos json:
 }
 ```
 
+##Requisitos para implementar PuntoPagos
+
+Para comenzar la integración necesitamos que nos envíen las 3 URLs que PuntoPagos utiliza para interactuar con cada comercio. Estas son:
+
+* **Url Notificacion**: Es la url a la cual PuntoPagos notificará el resultado de la transacción en curso. Mas detalles en el [Paso 4](#paso-4)
+* **Url Exito**: Esta es la url a la cual PuntoPagos redirigirá al comprador si la transacción fue exitosa. Más detalles en el [Paso 5](#paso-5)
+* **Url Fracaso**: Ídem anterior, pero para el caso que la transacción no sea exitosa. Más detalles en el [Paso 5](#paso-5)
+
+En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para realizar pruebas. Una vez que nos confirmen que todo está funcionando bien y verifiquemos que la integracion esta ok, PuntoPagos creará el ambiente de producción.
+
+Cada ambiente, SandBox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integracion ante eventuales mejoras sin afectar el ambiente de produccion.
+
 ## Anexos
 
 ### Códigos de los medios de pago
