@@ -3,7 +3,7 @@ PuntoPagos API
 
 ## Perspectiva General
 
-El manual ténico tiene como objetivo describir las funcionalidades y los parámetros necesarios de los servicios web proporcionados por Punto Pagos para el correcto funcionamiento de los botones de pago de nuestro sistema de recaudación electrónica.
+El manual técnico tiene como objetivo describir las funcionalidades y los parámetros necesarios de los servicios web proporcionados por Punto Pagos para el correcto funcionamiento de los botones de pago de nuestro sistema de recaudación electrónica.
 
 En el caso particular de la documentación REST, proveerá los servicios REST disponibles tanto en formato JSON como XML, siendo el formato JSON el formato por defecto.
 
@@ -11,7 +11,7 @@ Este documento está dirigido a desarrolladores.
 
 ## Especificaciones Técnicas
 
-Mediante nuestro kit de integración (API) el comercio puede acceder a todas las funcionalidades de PuntoPagos.com, el kit consta de una serie de métodos que pueden ser invocados a t ravés de nuestros servicios web.
+Mediante nuestro kit de integración (API) el comercio puede acceder a todas las funcionalidades de PuntoPagos.com, el kit consta de una serie de métodos que pueden ser invocados a través de nuestros servicios web.
 
 El siguiente diagrama muestra a grandes rasgos como es la comunicación para una transacción de venta:
 
@@ -91,7 +91,7 @@ Variables:
 
 * trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracteres
 * medio_pago: Identificador del medio de pago. [Medios disponibles](#c%C3%B3digos-de-los-medios-de-pago)
-* monto:Monto total de la transacción
+* monto: Monto total de la transacción
 * detalle: Descripción del producto o servicio pagado (opcional)
 
 Ejemplo json:
@@ -113,7 +113,7 @@ Respuesta:
 * respuesta: 00 = OK (Otras según tabla errores)
 * token: Identificador único de la transacción en Punto Pagos
 * trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracter
-* monto:Monto total de la transacción
+* monto: Monto total de la transacción
 * error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
 
 Ejemplo json:
@@ -284,7 +284,7 @@ Después de firmado el mensaje el header tendrá el siguiente formato: Autoriz
 
 Ejemplo:
 
-Parametros:
+Parámetros:
 
 * LlaveID=0PN5J17HBGZHT7ZZ3X82
 * LlaveSecreta=uV3F4YluFJax1cKnvbcGwgjvx4QpvB+leU8dUj2o
@@ -334,19 +334,19 @@ Ejemplos json:
 
 Para comenzar la integración necesitamos que nos envíen las 3 URLs que PuntoPagos utiliza para interactuar con cada comercio. Estas son:
 
-* **Url Notificacion**: Es la url a la cual PuntoPagos notificará el resultado de la transacción en curso. Mas detalles en el [Paso 4](#paso-4)
+* **Url Notificacion**: Es la url a la cual PuntoPagos notificará el resultado de la transacción en curso. Más detalles en el [Paso 4](#paso-4)
 * **Url Exito**: Esta es la url a la cual PuntoPagos redirigirá al comprador si la transacción fue exitosa. Más detalles en el [Paso 5](#paso-5)
 * **Url Fracaso**: Ídem anterior, pero para el caso que la transacción no sea exitosa. Más detalles en el [Paso 5](#paso-5)
 
-En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para realizar pruebas. Una vez que nos confirmen que todo está funcionando bien y verifiquemos que la integracion esta ok, PuntoPagos creará el ambiente de producción.
+En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para realizar pruebas. Una vez que nos confirmen que todo está funcionando bien y verifiquemos que la integracion está ok, PuntoPagos creará el ambiente de producción.
 
-Cada ambiente, SandBox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integracion ante eventuales mejoras sin afectar el ambiente de produccion.
+Cada ambiente, SandBox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integración ante eventuales mejoras sin afectar el ambiente de producción.
 
 ## Anexos
 
 ### Códigos de los medios de pago
 
-Código | Descripcion
+Código | Descripción
 -------|------------------------
 2      | Tarjeta Presto
 3      | Webpay Transbank (tarjetas de crédito y débito)
@@ -358,7 +358,7 @@ Código | Descripcion
 10     | Tarjeta Ripley
 15     | Paypal
 
-### Codigos de error
+### Códigos de error
 
 Estos son los diferentes codigos de error que puede informar la API
 
@@ -371,7 +371,7 @@ Código | Descripcion
 
 ### Datos de prueba para el modo sandbox
 
-Numeros de tarjeta para WebPay
+Números de tarjeta para WebPay
 
 Tarjeta | Numero | CCV | Expiracion | Resultado Esperado
 --------|--------|-----|------------|--------------------
