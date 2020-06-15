@@ -4,7 +4,8 @@ PuntoPagos API
 Technical Manual (REST API)
 Simplified Version
 
-Version: 1.00 (Draft)
+Version: 1.00
+
 Last change: 15/06/2020 
 
 ## Introduction
@@ -34,29 +35,29 @@ Every request made to the web service, should be signed to ensure the integrity 
 the request. 
 
 
-### Modo Sandbox (desarrollo) versus Producción
+### Environments
 
-Los 2 ambientes funcionan exactamente de la misma manera. La idea es que primero se realicen pruebas en modo sandbox y, una vez que la integración funcione correctamente, pasar a produccion.
-
-La url en modo sanbox es:
+We have two environments, Sandbox and Production.
+Sandbox base URL
 ```
 https://sandbox.puntopagos.com
 ```
 
-La url de producción es:
+Production base URL
 ```
 https://www.puntopagos.com
 ```
 
-Las rutas son las mismas en modo Sandbox y produccion, por ejemplo, en modo sanbox la url para crear una transaccion es
+All services have the same URL scheme on both environments, example:
+Create transaction service in Sandbox env:
 ```
 https://sandbox.puntopagos.com/transaccion/crear
 ```
-Mientras que en producción sería:
+Create transaction service in Production env:
 ```
 https://www.puntopagos.com/transaccion/crear
 ```
-Por el momento los únicos medios de pago que se pueden usar en modo sandbox, son [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
+Sanbox has a reduced array of available payment methods, the only available methods are [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
 
 ### Step 1
 
