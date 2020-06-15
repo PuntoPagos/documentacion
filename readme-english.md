@@ -11,7 +11,7 @@ Last change: 15/06/2020
 ## Introduction
 
 The objective of this technical manual is to describe the functionalities and requirements for a commerce to integrate with our 
-payment processor.
+payment gateway.
 
 ## Technical Specs
 
@@ -59,8 +59,8 @@ Sanbox has a reduced array of available payment methods, the only available meth
 
 The commerce must match our environments, having an environment for staging where the integration will be tested. In both enviroments the commerce must implement:
 * **Notification URL**: This URL will be used by PuntoPagos to send the information about the outcome of a payment, see  [Step 4](#Step-4) for detailed info.
-* **Success URL**: When the client succesfully completes a payment it will be redirected to this URL, see [Step 5](#Step-5)
-* **Failure URL**: When the client cant complete a payment it will be redirected to this URL, see [Step 5](#step-5)
+* **Success URL**: When the client succesfully completes a payment it will be redirected to this URL, see [Step 6](#Step-6)
+* **Failure URL**: When the client cant complete a payment it will be redirected to this URL, see [Step 6](#step-6)
 
 
 
@@ -88,7 +88,7 @@ is the following:
 
 ```
 “transaccion/crear\n
-<transactionID>>\n
+<transactionID>\n
 <amount with 2 decimals>\n
 <date (specification RFC1123)>”
 ```
@@ -141,7 +141,7 @@ Api response to Step 1 request:
 Response:
 
 * respuesta: 00 = OK (00 means the transaction was created, for other values see errors table)
-* token: Punto Pagos ID for the transaction
+* token: PuntoPagos ID for the transaction
 * trx_id: Client ID for the transaction
 * monto: Total amount of the transaction
 * error: error message in case the answer is different of 00 (optional) 
@@ -177,15 +177,15 @@ Headers:
 
 * Fecha: Date of request (RFC1123 specification). 
   * Fecha: Mon, 15 Jun 2009 20:45:30 GMT
-* Autorizacion: Punto Pagos will sign the message using the client secret key. The sign message will have the following format: 
+* Autorizacion: PuntoPagos will sign the message using the client secret key. The sign message will have the following format: 
 
 
 ```
 “transaccion/notificacion\n
 <token>\n
-<identificador transacción>\n
-<monto operación con dos decimales>\n
-<fecha mismo formato del header>”
+<transactionID>\n
+<amount with 2 decimals>\n
+<date (specification RFC1123)>”
 ```
 
 Example:
@@ -208,7 +208,7 @@ The commerce must validate the message signature in order to confirm the origin 
 
 
 Variables:
-* token: Punto Pagos ID for the transaction
+* token: PuntoPagos ID for the transaction
 * trx_id: Client ID for the transaction
 * medio_pago: Payment method ID
 * monto: Total transaction amount
@@ -247,7 +247,7 @@ Method: GET
 
 Notification service Response:
 * respuesta: 00 = OK, 99 = error
-* token: Unique Identifier of the transaction at Punto Pagos
+* token: Unique Identifier of the transaction at PuntoPagos
 * error: error message in case the answer is different from 00 (optional)
 
 JSON Example: 
@@ -279,7 +279,7 @@ Before the transaction is approved, the commerce should verify that the notifica
 transaction has arrived correctly throught the token. In case the notification has not been received the commerce could verify the payment state with the following function:
  https://server/transaction/<token> and show the corresponding proofs.  
 
-If the client couldn't complete the payment, Punto Pagos will redirect to the commerce failure URL, where the
+If the client couldn't complete the payment, PuntoPagos will redirect to the commerce failure URL, where the
 commerce can show the client that the transaction could not be processed. 
 
 ```
@@ -309,7 +309,7 @@ Headers:
 * Fecha: Date of request (RFC1123 specification). 
   * Fecha: Mon, 15 Jun 2009 20:50:30 GMT
 
-* Autorizacion: Punto Pagos will sign the message using the client secret key. The signed
+* Autorizacion: PuntoPagos will sign the message using the client secret key. The signed
 message will have the following format: 
 
 
@@ -345,7 +345,7 @@ Parámetros:
 Response:
 
 * respuesta: 00 = OK (00 means the transaction was created, for other values see errors table)
-* token: Punto Pagos ID for the transaction
+* token: PuntoPagos ID for the transaction
 * trx_id: Client ID for the transaction
 * medio_pago: Payment method ID
 * monto: Total transaction amount
@@ -382,48 +382,47 @@ JSON example:
 }
 ```
 
-## Anexos
+## Appendix
 
-### Códigos de los medios de pago
+### Payment Methods IDs
 
-Código | Descripción
+ID     | Description
 -------|------------------------
 2      | Tarjeta Presto
-3      | Webpay Transbank (tarjetas de crédito y débito)
-4      | Botón de Pago Banco de Chile
-5      | Botón de Pago BCI
-6      | Botón de Pago TBanc
-7      | Botón de Pago Banco Estado
-16     | Botón de Pago BBVA
-10     | Tarjeta Ripley
-15     | Paypal
+3      | Webpay Transbank (chilean debit and credit card)
+4      | Banco de Chile button
+5      | Banco BCI button
+7      | Banco Estado button
+10     | Ripley Card
 
-### Códigos de error
 
-Estos son los diferentes codigos de error que puede informar la API
+### Error codes
 
-Código | Descripcion
+
+Code   | Description
 -------|------------------------
-1      | Transaccion Rechazada
-2      | Transaccion Anulada
-6      | Transaccion Incompleta
-7      | Error del financiador
+1      | Rejected Transaction
+2      | Void Transaction
+6      | Incomplete Transaction
+7      | Payment Method Error
 
-### Datos de prueba para el modo sandbox
+### Staging Test Data 
 
-Números de tarjeta para WebPay
+Debit and credit card TEST data for WebPay
 
 Tarjeta | Numero | CCV | Expiracion | Resultado Esperado
 --------|--------|-----|------------|--------------------
 Visa    | 4051885600446623 | 123 | cualquiera | Exito
 Mastercard | 5186059559590568 | 123 | cualquiera |Fracaso 
 
-Al pedir un RUT se debe ingresar ``11111111-1`` y la clave ``123``
+Webpay Test Environment credentials:
+RUT ``11111111-1``
+Password ``123``
 
-#### Ripley
+#### Ripley card
 
-Para usar Ripley en modo sandbox estos son los datos:
 
+Credentials
 ```
 Rut: 16389806-3
 Clave: 1234
