@@ -26,7 +26,7 @@ kit has several methods that can be invoked through the web services.
 
 The following diagram shows how is the communication process for a single sale transaction:
 
-![Diagrama de llamadas](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo-llamadas.png "Diagrama de llamadas")
+![API calls](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/PP_eng.PNG.png "API calls")
 
 All the information must be transmited encrypted with an SSL certificate under the https protocol. In case
 the commerce shop does not have a digital certificate, they will need to request the documentation
@@ -283,21 +283,26 @@ Example:
 Commerce failure URL: ``https://micomercio.com/transacciones/fracaso/``
 Redirection: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
 
-### Functions
+Functions
+=============
 
-El comercio en todo momento podrá verificar el pago de una determinada transacción.
+### Transaction State
+
+With this function the commerce can at any time verify the payment status of a given transaction. 
 
 ```
-Función: https://servidor/transaccion/<token>
-Método: GET
+URL: https://servidor/transaccion/<token>
+Method: GET
 ```
 
 Headers:
 
-* Fecha: Fecha del request según la especificación RFC1123.
+* Fecha: Date of request (RFC1123 specification). 
   * Fecha: Mon, 15 Jun 2009 20:50:30 GMT
 
-* Autorizacion: Punto Pagos firmará el mensaje utilizando la llave secreta del cliente, el mensaje a firmar tendrá el siguiente formato:
+* Autorizacion: Punto Pagos will sign the message using the client secret key. The signed
+message will have the following format: 
+
 
 ```
 “transaccion/traer\n
@@ -307,7 +312,7 @@ Headers:
 <fecha mismo formato del header>”
 ```
 
-Ejemplo:
+Example:
 
 ```
 “transaccion/traer\n
@@ -317,34 +322,35 @@ Ejemplo:
 Mon, 15 Jun 2009 20:50:30 GMT”
 ```
 
-Después de firmado el mensaje el header tendrá el siguiente formato: Autorizacion: PP <LlaveID>:<MensajeFirmado>
+After the message is signed, the header will have the following format:  
+Autorizacion: PP <IDKey>:<SignedMessage>
 
-Ejemplo:
+Example:
 
 Parámetros:
 
-* LlaveID=0PN5J17HBGZHT7ZZ3X82
+* IDKey=0PN5J17HBGZHT7ZZ3X82
 * LlaveSecreta=uV3F4YluFJax1cKnvbcGwgjvx4QpvB+leU8dUj2o
   * Autorizacion: PP 0PN5J17HBGZHT7ZZ3X82:AVrD3e9idIqAxRSH+15Yqz7qQkc=
 
-Respuesta:
+Response:
 
-* respuesta: 00 = OK (Otras según tabla errores)
-* token: Identificador único de la transacción en Punto Pagos
-* trx_id:Identificadorúnicodelatransaccióndelcliente (opcional)
-* medio_pago:Identificadordelmediodepago(opcional)
-* monto:Montototaldelatransacción(opcional)
-* fecha_aprobacion:Fechadeaprobacióndelatransacción(Formato:yyyy-MM-ddTHH:mm:ss) (opcional)
-* numero_tarjeta: 4 últimos dígitos de la tarjeta (opcional)
-* num_cuotas: número de cuotas (opcional)
-* tipo_cuotas: tipo de cuotas (opcional)
-* valor_cuota: valor de cada cuota (opcional)
-* primer_vencimiento:primervencimiento(Formato:yyyy-MM-dd) (opcional)
-* numero_operacion: Número de operación en la institución financiera (opcional)
-* codigo_autorizacion:Códigodeautorizacióndelatransacción(opcional)
-* error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
+* respuesta: 00 = OK (00 means the transaction was created, for other values see errors table)
+* token: Punto Pagos ID for the transaction
+* trx_id: Client ID for the transaction
+* medio_pago: Payment method ID
+* monto: Total transaction amount
+* fecha_aprobacion: Transaction approval date (Format: yyyy-MM-ddTHH:mm:ss)
+* numero_tarjeta: Last 4 digits of the credit card (optional) 
+* num_cuotas: Installments number (optional) 
+* tipo_cuotas: Installment type (opcional)
+* valor_cuota: Installment value (opcional)
+* primer_vencimiento: First installment due date (Formato:yyyy-MM-dd) (optional)
+* numero_operacion: : Payment Method transaction ID
+* codigo_autorizacion: Payment Method  payment authorization code
+* error: error message in case the answer is different from 00 (optional)
 
-Ejemplos json:
+JSON example:
 
 ```json
 {
