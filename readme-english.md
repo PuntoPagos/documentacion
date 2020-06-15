@@ -1,14 +1,11 @@
 PuntoPagos API
+=============
 
 Technical Manual (REST API)
 Simplified Version
 
-
-
-
-Version: 0.98 (Draft)
-Last change: 18/5/2010 
-=============
+Version: 1.00 (Draft)
+Last change: 15/06/2020 
 
 ## Introduction
 
@@ -30,8 +27,8 @@ The following diagram shows how is the communication process for a single sale t
 
 ![Diagrama de llamadas](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo-llamadas.png "Diagrama de llamadas")
 
-All the information must be transmited encrypted with an SSL certifícate under the https protocol. In case
-the commerce shop does not have a digital certifícate, they will need to request the documentation
+All the information must be transmited encrypted with an SSL certificate under the https protocol. In case
+the commerce shop does not have a digital certificate, they will need to request the documentation
 manual using public keys.
 Every request made to the web service, should be signed to ensure the integrity and the authenticity of
 the request. 
