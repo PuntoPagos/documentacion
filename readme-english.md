@@ -10,17 +10,12 @@ Last change: 15/06/2020
 
 ## Introduction
 
-The objective of this technical manual is to describe the functionalities and required parameters for the
-web services provided by PuntoPagos.com, for the correct operation of the payment buttons of our
-electronic collection services.
-For the particular case of the REST documentation, it will provide the REST services on JSON and
-XML format. The JSON format is the default one.
-This document has been created for developers. 
-
+The objective of this technical manual is to describe the functionalities and requirements for a commerce to integrate with our 
+payment processor.
 
 ## Technical Specs
 
-Through our integration kit (API), any commerce can access all the funtionalities of Puntopagos.com. The
+Through our API, any commerce can access all the funtionalities of Puntopagos.com. The
 kit has several methods that can be invoked through the web services.
 
 
@@ -38,6 +33,7 @@ the request.
 ### Environments
 
 We have two environments, Sandbox and Production.
+
 Sandbox base URL
 ```
 https://sandbox.puntopagos.com
@@ -59,6 +55,19 @@ https://www.puntopagos.com/transaccion/crear
 ```
 Sanbox has a reduced array of available payment methods, the only available methods are [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
 
+###Integration requirements
+
+The commerce must match our environments, having an environment for staging where the integration will be tested. In both enviroments the commerce must implement:
+* **Notification URL**: This URL will be used by PuntoPagos to send the information about the outcome of a payment, see  [Step 4](#Step-4) for detailed info.
+* **Success URL**: When the client succesfully completes a payment it will be redirected to this URL, see [Step 5](#Step-5)
+* **Failure URL**: When the client cant complete a payment it will be redirected to this URL, see [Step 5](#step-5)
+
+
+
+Upon creating an account in PuntoPagos the commerce will receive a IDKey and SecretKey wich will be used to sign the calls. 
+
+Integration
+=============
 ### Step 1
 
 On step 1, the transaction is created on PuntoPagos through the web service.
@@ -372,18 +381,6 @@ JSON example:
 	"error":"Pago Rechazado"
 }
 ```
-
-##Requisitos para implementar PuntoPagos
-
-Para comenzar la integración necesitamos que nos envíen las 3 URLs que PuntoPagos utiliza para interactuar con cada comercio. Estas son:
-
-* **Url Notificacion**: Es la url a la cual PuntoPagos notificará el resultado de la transacción en curso. Más detalles en el [Paso 4](#paso-4)
-* **Url Exito**: Esta es la url a la cual PuntoPagos redirigirá al comprador si la transacción fue exitosa. Más detalles en el [Paso 5](#paso-5)
-* **Url Fracaso**: Ídem anterior, pero para el caso que la transacción no sea exitosa. Más detalles en el [Paso 5](#paso-5)
-
-En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para realizar pruebas. Una vez que nos confirmen que todo está funcionando bien y verifiquemos que la integracion está ok, PuntoPagos creará el ambiente de producción.
-
-Cada ambiente, SandBox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integración ante eventuales mejoras sin afectar el ambiente de producción.
 
 ## Anexos
 
