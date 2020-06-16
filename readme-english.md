@@ -21,7 +21,7 @@ kit has several methods that can be invoked through the web services.
 
 The following diagram shows how is the communication process for a single sale transaction:
 
-![API calls](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/PP_eng.PNG.png "API calls")
+![API calls](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/PP_eng.PNG "API calls")
 
 All the information must be transmited encrypted with an SSL certificate under the https protocol. In case
 the commerce shop does not have a digital certificate, they will need to request the documentation
