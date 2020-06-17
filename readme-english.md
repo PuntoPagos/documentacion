@@ -158,7 +158,7 @@ JSON Example:
 }
 ```
 
-### Step 3 Redirections
+### Step 3 Client redirection to PuntoPagos
 
 The commerce redirects with the token to PuntoPagos, which in turn redirects the client to the page of the chosen payment method to complete the payment.
 
@@ -265,7 +265,7 @@ JSON Example:
 ```
 
 
-### Step 6 Redirect client back to commerce
+### Step 6 Client redirection to commerce
 
 After a successful payment, PuntoPagos will redirect the client to the commerce success URL. 
 
@@ -417,8 +417,8 @@ Debit and credit card TEST data for WebPay
 
 Card | Number | CCV | Expiry | Result
 --------|--------|-----|------------|--------------------
-Visa    | 4051885600446623 | 123 | cualquiera | Success
-Mastercard | 5186059559590568 | 123 | cualquiera |Failure 
+Visa    | 4051885600446623 | 123 | any | Success
+Mastercard | 5186059559590568 | 123 | any |Failure 
 
 Webpay Test Environment credentials:
 RUT ``11111111-1``
