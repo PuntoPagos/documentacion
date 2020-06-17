@@ -21,7 +21,7 @@ kit has several methods that can be invoked through the web services.
 
 The following diagram shows how is the communication process for a single sale transaction:
 
-![API calls](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/PP_eng.PNG "API calls")
+![API calls](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo_en.jpg "API calls")
 
 All the information must be transmited encrypted with an SSL certificate under the https protocol. In case
 the commerce shop does not have a digital certificate, they will need to request the documentation
@@ -55,7 +55,7 @@ https://www.puntopagos.com/transaccion/crear
 ```
 Sanbox has a reduced array of available payment methods, the only available methods are [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
 
-###Integration requirements
+### Integration requirements
 
 The commerce must match our environments, having an environment for staging where the integration will be tested. In both enviroments the commerce must implement:
 * **Notification URL**: This URL will be used by PuntoPagos to send the information about the outcome of a payment, see  [Step 4](#Step-4) for detailed info.
@@ -68,7 +68,7 @@ Upon creating an account in PuntoPagos the commerce will receive a IDKey and Sec
 
 Integration
 =============
-### Step 1
+### Step 1 Create Transaction
 
 On step 1, the transaction is created on PuntoPagos through the web service.
 
@@ -134,13 +134,13 @@ JSON Example:
 }
 ```
 
-### Step 2
+### Step 2 Response with PuntoPagos Token
 
-Api response to Step 1 request:
+Api will respond to Step 1 request with numeric code for success (00), with the PuntoPagos unique ID (token) and some of the info sent on the request:
 
 Response:
 
-* respuesta: 00 = OK (00 means the transaction was created, for other values see errors table)
+* respuesta: 00 = OK (code 00 means the transaction was created, for other values see errors table)
 * token: PuntoPagos ID for the transaction
 * trx_id: Client ID for the transaction
 * monto: Total amount of the transaction
@@ -158,12 +158,17 @@ JSON Example:
 }
 ```
 
-### Step 3
+### Step 3 Client redirection to PuntoPagos
 
-PuntoPagos redirects the client to the page of the chosen payment method to complete the payment.
+The commerce redirects with the token to PuntoPagos, which in turn redirects the client to the page of the chosen payment method to complete the payment.
 
+```	
+URL: https://servidor/transaccion/procesar/<token>
+Método: GET
+```
+Example: https://sandbox.puntopagos.com/transaccion/procesar/9XJ08401WN0071839
 
-### Step 4
+### Step 4 Payment notification
 
 When the client completes the payment, PuntoPagos will notify the commerce of the payment result through the notification service previosly defined by the commerce.
 In case the commerce cannot implement the notification service, it should request the NVP POST documentation
@@ -243,7 +248,7 @@ ULR: https://url_notificacion<token> (lado del comercio)
 Method: GET
 ```
 
-### Step 5
+### Step 5 Notification response
 
 Notification service Response:
 * respuesta: 00 = OK, 99 = error
@@ -260,7 +265,7 @@ JSON Example:
 ```
 
 
-### Step 6
+### Step 6 Client redirection to commerce
 
 After a successful payment, PuntoPagos will redirect the client to the commerce success URL. 
 
@@ -410,10 +415,10 @@ Code   | Description
 
 Debit and credit card TEST data for WebPay
 
-Tarjeta | Numero | CCV | Expiracion | Resultado Esperado
+Card | Number | CCV | Expiry | Result
 --------|--------|-----|------------|--------------------
-Visa    | 4051885600446623 | 123 | cualquiera | Exito
-Mastercard | 5186059559590568 | 123 | cualquiera |Fracaso 
+Visa    | 4051885600446623 | 123 | any | Success
+Mastercard | 5186059559590568 | 123 | any |Failure 
 
 Webpay Test Environment credentials:
 RUT ``11111111-1``
