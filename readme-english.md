@@ -55,7 +55,7 @@ https://www.puntopagos.com/transaccion/crear
 ```
 Sanbox has a reduced array of available payment methods, the only available methods are [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
 
-###Integration requirements
+### Integration requirements
 
 The commerce must match our environments, having an environment for staging where the integration will be tested. In both enviroments the commerce must implement:
 * **Notification URL**: This URL will be used by PuntoPagos to send the information about the outcome of a payment, see  [Step 4](#Step-4) for detailed info.
