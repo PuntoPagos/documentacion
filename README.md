@@ -1,4 +1,4 @@
-PuntoPagos API
+Punto Pagos API
 =============
 
 ## Perspectiva General
@@ -17,15 +17,15 @@ El siguiente diagrama muestra a grandes rasgos como es la comunicación para un
 
 ![Diagrama de llamadas](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo_es.jpg "Diagrama de llamadas")
 
-Se recomienda que toda la información sea transmitida encriptada con un certificado SSL bajo el protocolo https. El certificado debe ser válido y emitido por una entidad de certificacion autorizada (no puede ser autofirmado). La API también permite su utilización sin contar con un certificado SSL. Esta variante se explica en el paso 4, durante la notificacion al comercio.
+Se recomienda que toda la información sea transmitida encriptada con un certificado SSL bajo el protocolo https. El certificado debe ser válido y emitido por una entidad de certificación autorizada (no puede ser autofirmado). La API también permite su utilización sin contar con un certificado SSL. Esta variante se explica en el paso 4, durante la notificación al comercio.
 
 Cada request realizado al servicio web debería ir firmado para comprobar la integridad y la autenticidad de la petición
 
-### Modo Sandbox (desarrollo) versus Producción
+### Ambientes Sandbox (desarrollo) versus Producción
 
-Los 2 ambientes funcionan exactamente de la misma manera. La idea es que primero se realicen pruebas en modo sandbox y, una vez que la integración funcione correctamente, pasar a produccion.
+Los 2 ambientes funcionan exactamente de la misma manera. La idea es que primero se realicen pruebas en modo sandbox y una vez que la integración funcione correctamente, pasar a produccion.
 
-La url en modo sanbox es:
+La url en modo sandbox es:
 ```
 https://sandbox.puntopagos.com
 ```
@@ -35,7 +35,7 @@ La url de producción es:
 https://www.puntopagos.com
 ```
 
-Las rutas son las mismas en modo Sandbox y produccion, por ejemplo, en modo sanbox la url para crear una transaccion es
+Las rutas son las mismas en modo Sandbox y producción, por ejemplo, en modo sandbox la url para crear una transacción es
 ```
 https://sandbox.puntopagos.com/transaccion/crear
 ```
@@ -45,9 +45,22 @@ https://www.puntopagos.com/transaccion/crear
 ```
 Por el momento los únicos medios de pago que se pueden usar en modo sandbox, son [Webpay y Ripley](#c%C3%B3digos-de-los-medios-de-pago)
 
-### Paso 1
+### Requisitos para implementar Punto Pagos
 
-En el paso 1 se crea la transacción en punto pagos, a través del servicio web.
+Para comenzar la integración necesitamos que nos envíen las 3 URLs que Punto Pagos utiliza para interactuar con cada comercio. Estas son:
+
+* **Url Notificación**: Es la url a la cual Punto Pagos notificará el resultado de la transacción en curso. Más detalles en el [Paso 4](#paso-4)
+* **Url Éxito**: Esta es la url a la cual Punto Pagos redirigirá al comprador si la transacción fue exitosa. Más detalles en el [Paso 6](#paso-6)
+* **Url Fracaso**: Ídem anterior, pero para el caso que la transacción no sea exitosa. Más detalles en el [Paso 6](#paso-6)
+
+En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para realizar pruebas. Una vez que nos confirmen que todo está funcionando bien y verifiquemos que la integración está OK, Punto Pagos creará el ambiente de producción.
+
+Cada ambiente, Sandbox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integración ante eventuales mejoras sin afectar el ambiente de producción.
+
+
+### Paso 1 Crear transacción
+
+En el paso 1 se crea la transacción en Punto Pagos, a través del servicio web.
 
 ```
 URL: https://servidor/transaccion/crear
@@ -79,7 +92,7 @@ Después de firmado el mensaje el header tendrá el siguiente formato: Autoriz
 
 Ejemplo:
 
-Parametros:
+Parámetros:
 
 * LlaveID=0PN5J17HBGZHT7ZZ3X82
 * LlaveSecreta=uV3F4YluFJax1cKnvbcGwgjvx4QpvB+leU8dUj2o
@@ -104,17 +117,17 @@ Ejemplo json:
 }
 ```
 
-### Paso 2
+### Paso 2 Punto Pagos devuelve ID único de TRX (token)
 
-Nuestra API devuelve la respuesta al request realizado en el paso 1.
+Nuestra API envía la respuesta al request realizado en el paso 1.
 
 Respuesta:
 
 * respuesta: 00 = OK (Otras según tabla errores)
 * token: Identificador único de la transacción en Punto Pagos
-* trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracter
+* trx_id: Identificador único de la transacción del cliente. Su longitud no debe ser mayor a 15 caracteres.
 * monto: Monto total de la transacción
-* error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
+* error: Mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
 
 Ejemplo json:
 
@@ -128,22 +141,22 @@ Ejemplo json:
 }
 ```
 
-### Paso 3
+### Paso 3 Redirección a pagar
 
-Se redirecciona al cliente a la URL de procesamiento usando el token obtenido en el paso 2
+El comercio redirecciona al cliente a la URL de procesamiento usando el token obtenido en el paso 2 y Punto Pagos envía al cliente al medio de pago seleccionado.
 
 ```
 Función: https://servidor/transaccion/procesar/<token>
 Método: GET
 ```
 
-Ejemplo: ``https://servidor/transaccion/procesar/9XJ08401WN0071839``
+Ejemplo: ``https://sandbox.puntopagos.com/transaccion/procesar/9XJ08401WN0071839``
 
-### Paso 4
+### Paso 4 Notificación de pago
 
-Luego que el cliente realiza el pago en la institución financiera, Punto Pagos procederá a notificar al comercio que se efectuó el pago, a la URL de notificacion previamente definida por el comercio.
+Luego que el cliente realiza el pago en la institución financiera, Punto Pagos procederá a notificar al comercio que se efectuó el pago, a la URL de notificación previamente definida por el comercio.
 
-En el caso que la url de notificacion sea via HTTPS (utilizando encriptación SSL), el servidor hace una llamada a la URL de notificacion:
+En el caso que la url de notificación sea via HTTPS (utilizando encriptación SSL), el servidor hace una llamada a la URL de notificación:
 
 ```
 Función: https://url_notificacion (lado del comercio)
@@ -173,7 +186,7 @@ Ejemplo:
 Mon, 15 Jun 2009 20:48:30 GMT”
 ```
 
-Al igual que en el paso 1, después de firmado el mensaje el header tendrá el siguiente formato:
+Al igual que en el #Paso 1, después de firmado el mensaje el header tendrá el siguiente formato:
 
 Autorizacion: PP <LlaveID>:<MensajeFirmado>
 Ejemplo:
@@ -187,13 +200,13 @@ Variables:
 * token: Identificador único de la transacción en Punto Pagos
 * trx_id: Identificador único de la transacción del cliente
 * medio_pago: Identificador del medio de pago
-* monto:Montototaldelatransacción
-* fecha_aprobacion:Fechadeaprobacióndelatransacción(Formato:yyyy-MM-ddTHH:mm:ss)
+* monto: Monto total de la transacción
+* fecha_aprobacion: Fecha de aprobación de la transacción (Formato:yyyy-MM-ddTHH:mm:ss)
 * numero_tarjeta: 4 últimos dígitos de la tarjeta (opcional)
 * num_cuotas: número de cuotas (opcional)
 * tipo_cuotas: tipo de cuotas (opcional)
 * valor_cuota: valor de cada cuota (opcional)
-* primer_vencimiento:primervencimiento(Formato:yyyy-MM-dd) (opcional)
+* primer_vencimiento: primer vencimiento(Formato:yyyy-MM-dd) (opcional)
 * numero_operacion: Número de operación en la institución financiera (opcional)
 * codigo_autorizacion: Código de autorización de la transacción
 
@@ -211,16 +224,33 @@ Ejemplo json:
 }
 ```
 
-En el caso que no se cuente con un certificado SSL valido y la url de notificación del comercio sea solamente http, el servidor no envía los datos de la notificacion completos, sino que hace una llamada a la url informando el token. El comercio debera, ya con el token en su poder, realizar otra llamada a nuestra api (como se explica en la descripcion de ``transaccion/traer``), esta vez si, conectándose a nuestra api via SSL de manera segura.
+En el caso que no se cuente con un certificado SSL válido y la url de notificación del comercio sea solamente http, el servidor no envía los datos de la notificación completos, sino que hace una llamada a la url informando el token. El comercio deberá, ya con el token en su poder, realizar otra llamada a nuestra API (como se explica en la descripción de ``transaccion/traer``), esta vez si, conectándose a nuestra API via SSL de manera segura.
 
 ```
 Función: https://url_notificacion<token> (lado del comercio)
 Método: GET
 ```
+### Paso 5 Respuesta de la notificación
 
-### Paso 6
+Respuesta del servicio de notificación:
 
-Luego de procesado el pago y en caso de que sea exitoso, Punto Pagos procederá a redireccionar al cliente hacia la página del comercio.
+respuesta: 00 = OK, 99 = error
+token: Identificador único de la transacción en Punto Pagos
+error: Mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
+
+Ejemplo JSON:
+```
+{
+	"respuesta":"00",
+	"token":"9XJ08401WN0071839"
+} 
+```
+
+### Paso 6 Retorno al comercio
+
+Luego de procesado el pago Punto Pagos procederá a redireccionar al cliente hacia la página del comercio.
+
+En caso de éxito redireccionará a la página de éxito del comercio:
 
 ```
 Función: https://url_exito<token> (lado del comercio)
@@ -229,12 +259,12 @@ Método: GET
 
 Ejemplo:
 
-Url de exito del comercio: ``https://micomercio.com/transacciones/exito/``
-Redireccion en caso de exito: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
+Url de éxito del comercio: ``https://micomercio.com/transacciones/exito/``
+Redireccion en caso de éxito: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
 
 Antes de dar la transacción por aprobada, el comercio deberá verificar que la notificación de dicha transacción haya llegado correctamente a través del token, en caso de que la notificación no haya sido recibida, el comercio podrá verificar el estado del pago con la función: https://servidor/transaccion/<token> y mostrar los comprobantes correspondientes.
 
-En el caso que no se haya podido procesar el pago, Punto Pagos redireccionará hacia el url de fracaso donde el cliente mostrara una pantalla en donde se comunica al cliente que el pago de la transacción no ha sido completado con éxito.
+En el caso que no se haya podido procesar el pago, Punto Pagos redireccionará hacia la URL de fracaso del comercio:
 
 ```
 Función: https://url_fracaso<token>
@@ -243,10 +273,10 @@ Método: GET
 
 Ejemplo:
 
-Url de exito del comercio: ``https://micomercio.com/transacciones/fracaso/``
-Redireccion en caso de exito: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
+Url de éxito del comercio: ``https://micomercio.com/transacciones/fracaso/``
+Redirección en caso de éxito: ``https://micomercio.com/transacciones/exito/9XJ08401WN0071839``
 
-### Obtener el estado de una transaccion
+### Obtener el estado de una transacción
 
 El comercio en todo momento podrá verificar el pago de una determinada transacción.
 
@@ -294,18 +324,18 @@ Respuesta:
 
 * respuesta: 00 = OK (Otras según tabla errores)
 * token: Identificador único de la transacción en Punto Pagos
-* trx_id:Identificadorúnicodelatransaccióndelcliente (opcional)
-* medio_pago:Identificadordelmediodepago(opcional)
-* monto:Montototaldelatransacción(opcional)
-* fecha_aprobacion:Fechadeaprobacióndelatransacción(Formato:yyyy-MM-ddTHH:mm:ss) (opcional)
+* trx_id: Identificador único de la transacción del cliente (opcional)
+* medio_pago: Identificador del medio de pago(opcional)
+* monto: Monto total de la transacción (opcional)
+* fecha_aprobacion: Fecha de aprobación de la transacción (Formato:yyyy-MM-ddTHH:mm:ss) (opcional)
 * numero_tarjeta: 4 últimos dígitos de la tarjeta (opcional)
-* num_cuotas: número de cuotas (opcional)
-* tipo_cuotas: tipo de cuotas (opcional)
-* valor_cuota: valor de cada cuota (opcional)
-* primer_vencimiento:primervencimiento(Formato:yyyy-MM-dd) (opcional)
+* num_cuotas: Número de cuotas (opcional)
+* tipo_cuotas: Tipo de cuotas (opcional)
+* valor_cuota: Valor de cada cuota (opcional)
+* primer_vencimiento: Primer vencimiento (Formato:yyyy-MM-dd) (opcional)
 * numero_operacion: Número de operación en la institución financiera (opcional)
-* codigo_autorizacion:Códigodeautorizacióndelatransacción(opcional)
-* error: mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
+* codigo_autorizacion: Código de autorización de la transacción (opcional)
+* error: Mensaje de error en caso que la respuesta sea distinta de 00 (opcional)
 
 Ejemplos json:
 
@@ -330,18 +360,6 @@ Ejemplos json:
 }
 ```
 
-##Requisitos para implementar PuntoPagos
-
-Para comenzar la integración necesitamos que nos envíen las 3 URLs que PuntoPagos utiliza para interactuar con cada comercio. Estas son:
-
-* **Url Notificacion**: Es la url a la cual PuntoPagos notificará el resultado de la transacción en curso. Más detalles en el [Paso 4](#paso-4)
-* **Url Exito**: Esta es la url a la cual PuntoPagos redirigirá al comprador si la transacción fue exitosa. Más detalles en el [Paso 5](#paso-5)
-* **Url Fracaso**: Ídem anterior, pero para el caso que la transacción no sea exitosa. Más detalles en el [Paso 5](#paso-5)
-
-En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para realizar pruebas. Una vez que nos confirmen que todo está funcionando bien y verifiquemos que la integracion está ok, PuntoPagos creará el ambiente de producción.
-
-Cada ambiente, SandBox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integración ante eventuales mejoras sin afectar el ambiente de producción.
-
 ## Anexos
 
 ### Códigos de los medios de pago
@@ -352,37 +370,34 @@ Código | Descripción
 3      | Webpay Transbank (tarjetas de crédito y débito)
 4      | Botón de Pago Banco de Chile
 5      | Botón de Pago BCI
-6      | Botón de Pago TBanc
 7      | Botón de Pago Banco Estado
-16     | Botón de Pago BBVA
 10     | Tarjeta Ripley
-15     | Paypal
 
 ### Códigos de error
 
-Estos son los diferentes codigos de error que puede informar la API
+Estos son los diferentes códigos de error que puede informar la API
 
-Código | Descripcion
+Código | Descripción
 -------|------------------------
-1      | Transaccion Rechazada
-2      | Transaccion Anulada
-6      | Transaccion Incompleta
+1      | Transacción Rechazada
+2      | Transacción Anulada
+6      | Transacción Incompleta
 7      | Error del financiador
 
-### Datos de prueba para el modo sandbox
+### Datos de prueba para el modo Sandbox
 
 Números de tarjeta para WebPay
 
-Tarjeta | Numero | CCV | Expiracion | Resultado Esperado
---------|--------|-----|------------|--------------------
-Visa    | 4051885600446623 | 123 | cualquiera | Exito
-Mastercard | 5186059559590568 | 123 | cualquiera |Fracaso 
+Tarjeta    | Número           | CCV | Expiración | Resultado Esperado
+-----------|------------------|-----|------------|--------------------
+Visa       | 4051885600446623 | 123 | cualquiera | Éxito
+Mastercard | 5186059559590568 | 123 | cualquiera | Fracaso 
 
 Al pedir un RUT se debe ingresar ``11111111-1`` y la clave ``123``
 
 #### Ripley
 
-Para usar Ripley en modo sandbox estos son los datos:
+Para usar Ripley en modo Sandbox estos son los datos:
 
 ```
 Rut: 16389806-3
