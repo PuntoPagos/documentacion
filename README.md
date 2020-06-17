@@ -57,7 +57,8 @@ En un principio las 3 urls serán utilizadas en el ambiente de Sandbox para real
 
 Cada ambiente, Sandbox y Producción, puede tener un set diferente de urls. Esto permite a un comercio que ya está en producción, seguir haciendo pruebas de integración ante eventuales mejoras sin afectar el ambiente de producción.
 
-
+Integración
+=============
 ### Paso 1 Crear transacción
 
 En el paso 1 se crea la transacción en Punto Pagos, a través del servicio web.
