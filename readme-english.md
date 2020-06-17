@@ -134,13 +134,13 @@ JSON Example:
 }
 ```
 
-### Step 2 Response with TRX Unique ID (token)
+### Step 2 Response with PuntoPagos Token
 
-Api response to Step 1 request:
+Api will respond to Step 1 request with numeric code for success (00), with the PuntoPagos unique ID (token) and some of the info sent on the request:
 
 Response:
 
-* respuesta: 00 = OK (00 means the transaction was created, for other values see errors table)
+* respuesta: 00 = OK (code 00 means the transaction was created, for other values see errors table)
 * token: PuntoPagos ID for the transaction
 * trx_id: Client ID for the transaction
 * monto: Total amount of the transaction
