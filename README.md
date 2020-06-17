@@ -15,7 +15,7 @@ Mediante nuestro kit de integración (API) el comercio puede acceder a todas la
 
 El siguiente diagrama muestra a grandes rasgos como es la comunicación para una transacción de venta:
 
-![Diagrama de llamadas](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo-llamadas.png "Diagrama de llamadas")
+![Diagrama de llamadas](https://raw.githubusercontent.com/PuntoPagos/documentacion/master/img/flujo_es.jpg "Diagrama de llamadas")
 
 Se recomienda que toda la información sea transmitida encriptada con un certificado SSL bajo el protocolo https. El certificado debe ser válido y emitido por una entidad de certificacion autorizada (no puede ser autofirmado). La API también permite su utilización sin contar con un certificado SSL. Esta variante se explica en el paso 4, durante la notificacion al comercio.
 
