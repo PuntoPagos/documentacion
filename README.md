@@ -367,12 +367,17 @@ Ejemplos json:
 
 Código | Descripción
 -------|------------------------
-2      | Tarjeta Presto
+1      | Banco Santander ( aprobación sujeta a políticas del banco)
 3      | Webpay Transbank (tarjetas de crédito y débito)
 4      | Botón de Pago Banco de Chile
 5      | Botón de Pago BCI
 7      | Botón de Pago Banco Estado
-10     | Tarjeta Ripley
+22     | Mi Pago
+23     | Caja Vecina
+26     | Mach (Pronto)
+27     | Chek (Pronto)
+28     | Sweetpay (Pronto)
+
 
 ### Códigos de error
 
