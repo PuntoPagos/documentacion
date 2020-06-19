@@ -393,12 +393,16 @@ JSON example:
 
 ID     | Description
 -------|------------------------
-2      | Tarjeta Presto
-3      | Webpay Transbank (chilean debit and credit card)
-4      | Banco de Chile button
-5      | Banco BCI button
-7      | Banco Estado button
-10     | Ripley Card
+1      | Banco Santander ( Bank must aprove the commerce)
+3      | Webpay Transbank (credit and debir)
+4      | Botón de Pago Banco de Chile
+5      | Botón de Pago BCI
+7      | Botón de Pago Banco Estado
+22     | Mi Pago
+23     | Caja Vecina
+26     | Mach (Soon)
+27     | Chek (Soon)
+28     | Sweetpay (Soon)
 
 
 ### Error codes
