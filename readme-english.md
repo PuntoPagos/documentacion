@@ -38,10 +38,19 @@ Sandbox base URL
 ```
 https://sandbox.puntopagos.com
 ```
+Sandbox Backoffice URL
+```
+https://backoffice-sandbox.puntopagos.com
+```
+
 
 Production base URL
 ```
 https://www.puntopagos.com
+```
+Production Backoffice URL
+```
+https://backoffice.puntopagos.com
 ```
 
 All services have the same URL scheme on both environments, example:
