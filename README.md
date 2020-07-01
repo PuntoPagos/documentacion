@@ -29,12 +29,18 @@ La url en modo sandbox es:
 ```
 https://sandbox.puntopagos.com
 ```
-
+La url del Backoffice en modo sandbox es:
+```
+https://backoffice-sandbox.puntopagos.com
+```
 La url de producción es:
 ```
 https://www.puntopagos.com
 ```
-
+La url del Backoffice de producción es:
+```
+https://backoffice.puntopagos.com
+```
 Las rutas son las mismas en modo Sandbox y producción, por ejemplo, en modo sandbox la url para crear una transacción es
 ```
 https://sandbox.puntopagos.com/transaccion/crear
