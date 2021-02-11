@@ -381,7 +381,7 @@ Código | Descripción
 22     | Mi Pago
 23     | Caja Vecina
 26     | Mach (Pronto)
-27     | Chek (Pronto)
+27     | Chek
 28     | Sweetpay (Pronto)
 
 
