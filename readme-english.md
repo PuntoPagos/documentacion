@@ -6,7 +6,7 @@ Simplified Version
 
 Version: 1.00
 
-Last change: 15/06/2020 
+Last change: 16/04/2024 
 
 ## Introduction
 
@@ -88,9 +88,9 @@ Method: POST
 Headers:
 
 * Fecha:  Date of request (specification RFC1123). 
-  * Example: Fecha: Mon, 15 Jun 2009 20:45:30 GMT 
+  * Example: Fecha: Tue, 16 Apr 2024 17:58:49 GMT 
 
-* Autorizacion:  Message signature using algorithm HMAC-SHA1 with the secret key given by
+* Autorizacion:  Message signature using algorithm HMAC-SHA512 with the secret key given by
 PuntoPagos, and then the message is coded on base64. The message format that should be signed
 is the following: 
 
@@ -107,7 +107,7 @@ Example:
 ```
 “transaccion/crear\n 9787415132\n
 1000000.00\n
-Mon, 15 Jun 2009 20:45:30 GMT”
+Tue, 16 Apr 2024 17:58:49 GMT”
 ```
 
 After the message has been signed, the header will have the following format:
@@ -190,7 +190,7 @@ Method: POST
 Headers:
 
 * Fecha: Date of request (RFC1123 specification). 
-  * Fecha: Mon, 15 Jun 2009 20:45:30 GMT
+  * Fecha: Tue, 16 Apr 2024 17:58:49 GMT
 * Autorizacion: PuntoPagos will sign the message using the client secret key. The sign message will have the following format: 
 
 
@@ -208,7 +208,7 @@ Example:
 “transaccion/notificacion\n 9XJ08401WN0071839\n
 9787415132\n
 1000000.00\n
-Mon, 15 Jun 2009 20:48:30 GMT”
+Tue, 16 Apr 2024 17:58:49 GMT”
 ```
 
 Just as in Step 1, after the message has been signed, the header will have the following format:
@@ -243,7 +243,7 @@ JSON Example:
 	"trx_id":9787415132,
 	"medio_pago":"999",
 	"monto":1000000.00,
-	"fecha":"2009-06-15T20:49:00",
+	"fecha":"2024-04-16T14:15:00",
 	"numero_operacion":"7897851487",
 	"codigo_autorizacion":"34581"
 }
@@ -321,7 +321,7 @@ Method: GET
 Headers:
 
 * Fecha: Date of request (RFC1123 specification). 
-  * Fecha: Mon, 15 Jun 2009 20:50:30 GMT
+  * Fecha: Tue, 16 Apr 2024 17:58:49 GMT
 
 * Autorizacion: PuntoPagos will sign the message using the client secret key. The signed
 message will have the following format: 
@@ -342,7 +342,7 @@ Example:
 9XJ08401WN0071839\n
 9787415132\n
 1000000.00\n
-Mon, 15 Jun 2009 20:50:30 GMT”
+Tue, 16 Apr 2024 17:58:49 GMT”
 ```
 
 After the message is signed, the header will have the following format:  
@@ -382,7 +382,7 @@ JSON example:
 	"trx_id":9787415132,
 	"medio_pago":"999",
 	"monto":1000000.00,
-	"fecha":"2009-06-15T20:49:00",
+	"fecha":"2024-04-16T14:16:00",
 	"numero_operacion":"7897851487",
 	"codigo_autorizacion":"34581"
 }
@@ -402,17 +402,23 @@ JSON example:
 
 ID     | Description
 -------|------------------------
-1      | Banco Santander ( Bank must aprove the commerce)
-3      | Webpay Transbank (credit and debir)
+1      | Banco Santander (Bank must aprove the commerce)
+3      | Webpay Transbank (credit and debit)
 4      | Botón de Pago Banco de Chile
 5      | Botón de Pago BCI
 7      | Botón de Pago Banco Estado
+21	   | Tarjeta Hites
 22     | Mi Pago
-23     | Caja Vecina
-26     | Mach (Soon)
-27     | Chek (Soon)
-28     | Sweetpay (Soon)
-
+26     | Mach
+27     | Chek
+30     | Stripe
+31     | PuntosCMR
+35     | Fpay
+37     | Transferencia
+39     | Puntos Cencosud
+40     | Fpay CMR+DEBITO
+64     | Mercado Pago
+65     | Astropay
 
 ### Error codes
 
@@ -436,17 +442,3 @@ Mastercard | 5186059559590568 | 123 | any |Failure
 Webpay Test Environment credentials:
 RUT ``11111111-1``
 Password ``123``
-
-#### Ripley card
-
-
-Credentials
-```
-Rut: 16389806-3
-Clave: 1234
-Numero de tarjeta: 6281561467501027
-Codigo de verificacion: 360
-Vencimiento: 08-20
-Coordenadas: 77 77 77 (uno en cada box que solicita)
-Mail: test@test.com
-```

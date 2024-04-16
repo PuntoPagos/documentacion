@@ -76,9 +76,9 @@ Método: POST
 Headers:
 
 * Fecha: Fecha del request según la especificación RFC1123.
-  * Ejemplo: Fecha: Mon, 15 Jun 2009 20:45:30 GMT
+  * Ejemplo: Fecha: Tue, 16 Apr 2024 17:58:49 GMT
 
-* Autorizacion: Firma del mensaje utilizando el algoritmo HMAC-SHA1 con la llave secreta entregada por Punto Pagos y luego el mensaje se codifica en base64, el formato del mensaje a firmar es el siguiente:
+* Autorizacion: Firma del mensaje utilizando el algoritmo HMAC-SHA512 con la llave secreta entregada por Punto Pagos y luego el mensaje se codifica en base64, el formato del mensaje a firmar es el siguiente:
 
 ```
 “transaccion/crear\n
@@ -92,7 +92,7 @@ Ejemplo:
 ```
 “transaccion/crear\n 9787415132\n
 1000000.00\n
-Mon, 15 Jun 2009 20:45:30 GMT”
+Tue, 16 Apr 2024 17:58:49 GMT”
 ```
 
 Después de firmado el mensaje el header tendrá el siguiente formato: Autorizacion: PP <LlaveID>:<MensajeFirmado>
@@ -173,7 +173,7 @@ Método: POST
 Headers:
 
 * Fecha: Fecha del request según la especificación RFC1123.
-  * Fecha: Mon, 15 Jun 2009 20:45:30 GMT
+  * Fecha: Tue, 16 Apr 2024 17:58:49 GMT
 * Autorizacion: Punto Pagos firmará el mensaje utilizando la llave secreta del cliente, el mensaje a firmar tendrá el siguiente formato:
 
 ```
@@ -190,7 +190,7 @@ Ejemplo:
 “transaccion/notificacion\n 9XJ08401WN0071839\n
 9787415132\n
 1000000.00\n
-Mon, 15 Jun 2009 20:48:30 GMT”
+Tue, 16 Apr 2024 17:58:49 GMT”
 ```
 
 Al igual que en el #Paso 1, después de firmado el mensaje el header tendrá el siguiente formato:
@@ -225,7 +225,7 @@ Ejemplo json:
 	"trx_id":9787415132,
 	"medio_pago":"999",
 	"monto":1000000.00,
-	"fecha":"2009-06-15T20:49:00",
+	"fecha":"2024-04-16T14:10:00",
 	"numero_operacion":"7897851487",
 	"codigo_autorizacion":"34581"
 }
@@ -295,7 +295,7 @@ Método: GET
 Headers:
 
 * Fecha: Fecha del request según la especificación RFC1123.
-  * Fecha: Mon, 15 Jun 2009 20:50:30 GMT
+  * Fecha: Tue, 16 Apr 2024 17:58:49 GMT
 
 * Autorizacion: Punto Pagos firmará el mensaje utilizando la llave secreta del cliente, el mensaje a firmar tendrá el siguiente formato:
 
@@ -314,7 +314,7 @@ Ejemplo:
 9XJ08401WN0071839\n
 9787415132\n
 1000000.00\n
-Mon, 15 Jun 2009 20:50:30 GMT”
+Tue, 16 Apr 2024 17:58:49 GMT”
 ```
 
 Después de firmado el mensaje el header tendrá el siguiente formato: Autorizacion: PP <LlaveID>:<MensajeFirmado>
@@ -353,7 +353,7 @@ Ejemplos json:
 	"trx_id":9787415132,
 	"medio_pago":"999",
 	"monto":1000000.00,
-	"fecha":"2009-06-15T20:49:00",
+	"fecha":"2024-04-16T14:12:00",
 	"numero_operacion":"7897851487",
 	"codigo_autorizacion":"34581"
 }
@@ -373,16 +373,23 @@ Ejemplos json:
 
 Código | Descripción
 -------|------------------------
-1      | Banco Santander ( aprobación sujeta a políticas del banco)
+1      | Banco Santander (aprobación sujeta a políticas del banco)
 3      | Webpay Transbank (tarjetas de crédito y débito)
 4      | Botón de Pago Banco de Chile
 5      | Botón de Pago BCI
 7      | Botón de Pago Banco Estado
+21	   | Tarjeta Hites
 22     | Mi Pago
-23     | Caja Vecina
-26     | Mach (Pronto)
+26     | Mach
 27     | Chek
-28     | Sweetpay (Pronto)
+30     | Stripe
+31     | PuntosCMR
+35     | Fpay
+37     | Transferencia
+39     | Puntos Cencosud
+40     | Fpay CMR+DEBITO
+64     | Mercado Pago
+65     | Astropay
 
 
 ### Códigos de error
@@ -406,17 +413,3 @@ Visa       | 4051885600446623 | 123 | cualquiera | Éxito
 Mastercard | 5186059559590568 | 123 | cualquiera | Fracaso 
 
 Al pedir un RUT se debe ingresar ``11111111-1`` y la clave ``123``
-
-#### Ripley
-
-Para usar Ripley en modo Sandbox estos son los datos:
-
-```
-Rut: 16389806-3
-Clave: 1234
-Numero de tarjeta: 6281561467501027
-Codigo de verificacion: 360
-Vencimiento: 08-20
-Coordenadas: 77 77 77 (uno en cada box que solicita)
-Mail: test@test.com
-```
