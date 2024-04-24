@@ -379,17 +379,15 @@ Código | Descripción
 5      | Botón de Pago BCI
 7      | Botón de Pago Banco Estado
 21	   | Tarjeta Hites
-22     | Mi Pago
 26     | Mach
 27     | Chek
 30     | Stripe
 31     | PuntosCMR
-35     | Fpay
-37     | Transferencia
+37     | Transferencia ETPay
 39     | Puntos Cencosud
-40     | Fpay CMR+DEBITO
 64     | Mercado Pago
 65     | Astropay
+68     | Fintoc
 
 
 ### Códigos de error
