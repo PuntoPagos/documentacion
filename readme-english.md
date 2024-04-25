@@ -408,17 +408,19 @@ ID     | Description
 5      | Botón de Pago BCI
 7      | Botón de Pago Banco Estado
 21	   | Tarjeta Hites
-22     | Mi Pago
 26     | Mach
 27     | Chek
 30     | Stripe
 31     | PuntosCMR
-35     | Fpay
-37     | Transferencia
+36     | Niubiz QR
+37     | Transferencia ETPay
+38 	   | Pago Efectivo
 39     | Puntos Cencosud
-40     | Fpay CMR+DEBITO
 64     | Mercado Pago
 65     | Astropay
+66     | PowerPay
+67     | Openpay
+68     | Fintoc
 
 ### Error codes
 
